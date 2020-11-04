@@ -38,6 +38,7 @@ Route::get('v1/dre',[DreController::Class,'index']);
 
 Route::get('v1/asesoria/{id}',[AsesoriaController::Class,'asesoria']);
 Route::get('v1/asesoria/{id}/delete',[AsesoriaController::Class,'destroy']);
+Route::get('v1/asesoria/{id}/enviar',[AsesoriaController::Class,'enviara']);
 Route::post('v1/asesoria',[AsesoriaController::Class,'filter']);
 Route::post('v1/asesoria/store',[AsesoriaController::Class,'store']);
 Route::post('v1/asesoria/store/constacia',[AsesoriaController::Class,'constacia']);

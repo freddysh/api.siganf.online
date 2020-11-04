@@ -94,6 +94,7 @@ class AsesoriaController extends Controller
     public function filter(Request $request)
     {
         //
+        // return $request->all();
         $anio=$request->anio;
         $mes=$request->mes;
         $estado=$request->estado;
@@ -157,6 +158,22 @@ class AsesoriaController extends Controller
             $asesoria=Asesoria::findOrfail($id);
             // listamos los dias agregados
             if($asesoria->delete())
+                return response()->json(true);
+            else
+                return response()->json(false);
+        }
+        catch(Exception $ex){
+            return $ex;
+        }
+    }
+    public function enviar($id)
+    {
+        try{
+            // borramos todos los datos
+            $asesoria=Asesoria::findOrfail($id);
+            $asesoria->estado=1;
+            // listamos los dias agregados
+            if($asesoria->save())
                 return response()->json(true);
             else
                 return response()->json(false);
