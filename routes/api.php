@@ -10,6 +10,9 @@ use App\Http\Controllers\Admin\GradoController;
 use App\Http\Controllers\Admin\IieeController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\UgelController;
+use App\Http\Controllers\Admin\DepartamentoController;
+use App\Http\Controllers\Admin\DistritoController;
+use App\Http\Controllers\Admin\ProvinciaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +33,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['middleware' => ['cors']], function () {
 Route::get('v1/login/{user}/{pw}',[LoginController::Class,'login']);
 Route::get('v1/area-curricular/{nivel}',[AreaCurricularController::Class,'index']);
+Route::get('v1/iiee',[IieeController::Class,'index_lista']);
 Route::get('v1/iiee/{user_id}',[IieeController::Class,'index']);
 Route::get('v1/iiee/{user_id}/{iiee_id}/docentes',[IieeController::Class,'docentes']);
 Route::get('v1/iiee/{user_id}/{iiee_id}/grados',[IieeController::Class,'grados']);
@@ -48,4 +52,11 @@ Route::get('v1/dia/show/{dia_id}',[DiaController::Class,'index']);
 Route::get('v1/dia/{id}/delete',[DiaController::Class,'destroy']);
 Route::get('v1/grados/{iiee_id}/{nivel}',[GradoController::Class,'nivel_Educativo']);
 
+Route::get('v1/departamentos',[DepartamentoController::Class,'index']);
+Route::get('v1/{departamento_id}/provincias/',[ProvinciaController::Class,'index']);
+Route::get('v1/{provincia_id}/distritos/',[DistritoController::Class,'index']);
+
+
+Route::post('v1/iiee/store',[IieeController::Class,'store']);
+Route::put('v1/iiee/{iiee_id}/update',[IieeController::Class,'update']);
 });

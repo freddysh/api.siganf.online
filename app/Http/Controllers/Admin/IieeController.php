@@ -23,6 +23,13 @@ class IieeController extends Controller
 
         //  return response()->json(Dre::get());
          return response()->json($colegios);
+    }public function index_lista()
+    {
+        //
+        $colegios=Iiee::get();
+
+        //  return response()->json(Dre::get());
+         return response()->json($colegios);
     }
     public function docentes($user_id,$iiee_id)
     {
@@ -57,8 +64,46 @@ class IieeController extends Controller
     public function store(Request $request)
     {
         //
-    }
+        try {
+            // return $request->all();
+            $codigo_modular=$request->codigo_modular;
+            $nombre=$request->nombre;
+            $nivel=$request->nivel;
+            $centro_poblado=$request->centro_poblado;
+            $local=$request->local;
+            $direccion=$request->direccion;
+            $departamento=$request->departamento;
+            $provincia=$request->provincia;
+            $distrito=$request->distrito;
+            $ugel_id=$request->ugel_id;
 
+            $hay_ugel=Iiee::where('codigo_modular',$codigo_modular)
+            ->where('nombre',$nombre)
+            ->where('nivel',$nivel)
+            ->where('departamento',$departamento)
+            ->where('provincia',$provincia)
+            ->where('distrito',$distrito)
+            ->get()->count();
+            if($hay_ugel==0){
+            $objeto=new Iiee();
+            $objeto->codigo_modular=$codigo_modular;
+            $objeto->nombre=$nombre;
+            $objeto->nivel=$nivel;
+            $objeto->centro_poblado=$centro_poblado;
+            $objeto->local=$local;
+            $objeto->direccion=$direccion;
+            $objeto->departamento=$departamento;
+            $objeto->provincia=$provincia;
+            $objeto->distrito=$distrito;
+            $objeto->ugel_id=$ugel_id;
+            return response()->json($objeto->save());
+            }
+            //code...
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json($th);
+        }
+    }
     /**
      * Display the specified resource.
      *
@@ -91,6 +136,37 @@ class IieeController extends Controller
     public function update(Request $request, $id)
     {
         //
+        try {
+            // return $request->all();
+            $codigo_modular=$request->codigo_modular;
+            $nombre=$request->nombre;
+            $nivel=$request->nivel;
+            $centro_poblado=$request->centro_poblado;
+            $local=$request->local;
+            $direccion=$request->direccion;
+            $departamento=$request->departamento;
+            $provincia=$request->provincia;
+            $distrito=$request->distrito;
+            $ugel_id=$request->ugel_id;
+
+            $objeto= Iiee::findOrfail($id);
+            $objeto->codigo_modular=$codigo_modular;
+            $objeto->nombre=$nombre;
+            $objeto->nivel=$nivel;
+            $objeto->centro_poblado=$centro_poblado;
+            $objeto->local=$local;
+            $objeto->direccion=$direccion;
+            $objeto->departamento=$departamento;
+            $objeto->provincia=$provincia;
+            $objeto->distrito=$distrito;
+            $objeto->ugel_id=$ugel_id;
+            return response()->json($objeto->save());
+
+            //code...
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json($th);
+        }
     }
 
     /**
