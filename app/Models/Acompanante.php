@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Acompanante extends Model
 {
     use HasFactory;
-
     protected $table='acompanantes';
     public function iiee(){
         //relacion de uno a muchos

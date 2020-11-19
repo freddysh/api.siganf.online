@@ -166,7 +166,7 @@ class AsesoriaController extends Controller
             return $ex;
         }
     }
-    public function enviar($id)
+    public function enviara($id)
     {
         try{
             // borramos todos los datos

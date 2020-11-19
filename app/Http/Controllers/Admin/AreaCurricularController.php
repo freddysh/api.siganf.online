@@ -19,6 +19,13 @@ class AreaCurricularController extends Controller
         $rpt=AreaCurricular::where('nivel',$nivel)->get();
         return response()->json($rpt);
     }
+    public function areas_curriculares()
+    {
+        //
+        $rpt=AreaCurricular::get();
+        return response()->json($rpt);
+    }
+
 
     /**
      * Show the form for creating a new resource.

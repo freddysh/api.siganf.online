@@ -16,4 +16,11 @@ class DepartamentoController extends Controller
 
         return response()->json($departamentos);
     }
+    public function show($id){
+        $departamentos=Departamento::findorfail($id);
+        // return $departamentos;
+        // response()->json();
+
+        return response()->json($departamentos);
+    }
 }
