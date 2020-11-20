@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\UgelController;
 use App\Http\Controllers\Admin\DepartamentoController;
 use App\Http\Controllers\Admin\DistritoController;
 use App\Http\Controllers\Admin\ProvinciaController;
+use App\Http\Controllers\Admin\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +33,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::group(['middleware' => ['cors']], function () {
+Route::get('v1/user/{user_id}',[UserController::Class,'show']);
+Route::put('v1/user/{user_id}/update',[UserController::Class,'update']);
 Route::get('v1/login/{user}/{pw}',[LoginController::Class,'login']);
 Route::get('v1/area-curricular/{nivel}',[AreaCurricularController::Class,'index']);
 Route::get('v1/areas-curriculares',[AreaCurricularController::Class,'areas_curriculares']);
