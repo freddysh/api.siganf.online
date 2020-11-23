@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\AreaCurricular;
+use App\Models\Asesoria;
 use App\Models\Competencia;
 use App\Models\Criterio;
 use App\Models\Dia;
@@ -49,13 +50,12 @@ class DiaController extends Controller
     public function store(Request $request)
     {
         //
-// return $request->all();
-
         $dia_id=$request->dia_id;
         $dia=$request->dia_;
         $fecha=$request->fecha;
         $hora_inicio=$request->hora_inicio;
         $hora_fin=$request->hora_fin;
+        $hora_duracion=$request->hora_duracion;
         $medio_virtual=$request->medio_virtual||'';;
         $medio_virtual_otros=$request->medio_virtual_otros||'';
         $nivel_educativo=$request->nivel_educativo;
@@ -81,6 +81,7 @@ class DiaController extends Controller
             $nuevoDia->fecha=$fecha;
             $nuevoDia->hora_inicio=$hora_inicio;
             $nuevoDia->hora_fin=$hora_fin;
+            $nuevoDia->hora_duracion=$hora_duracion;
             $nuevoDia->medio_virtual=$medio_virtual;
             $nuevoDia->medio_virtual_otros=$medio_virtual_otros;
             $nuevoDia->nivel_educativo=$nivel_educativo;
@@ -92,9 +93,13 @@ class DiaController extends Controller
             $nuevoDia->obs_p_19=$obs_p_19;
             $nuevoDia->p_20=$p_20;
             $nuevoDia->obs_p_20=$obs_p_20;
+            $nuevoDia->estado=0;
             $nuevoDia->asesoria_id=$asesoria_id;
 
             if($nuevoDia->save()){
+                $asesoria=Asesoria::findorfail($asesoria_id);
+                $asesoria->estado=0;
+                $asesoria->save();
                 //TODO: Agregamos los grados
                 foreach($grados as $grado_){
                     $grado=new DiaGrado();
@@ -160,6 +165,7 @@ class DiaController extends Controller
             $editDia->fecha=$fecha;
             $editDia->hora_inicio=$hora_inicio;
             $editDia->hora_fin=$hora_fin;
+            $editDia->hora_duracion=$hora_duracion;
             $editDia->medio_virtual=$medio_virtual;
             $editDia->medio_virtual_otros=$medio_virtual_otros;
             $editDia->nivel_educativo=$nivel_educativo;
@@ -170,9 +176,13 @@ class DiaController extends Controller
             $editDia->p_19=$p_19;
             $editDia->obs_p_19=$obs_p_19;
             $editDia->p_20=$p_20;
+            $editDia->estado=0;
             $editDia->obs_p_20=$obs_p_20;
             $editDia->asesoria_id=$asesoria_id;
             if($editDia->save()){
+                $asesoria=Asesoria::findorfail($asesoria_id);
+                $asesoria->estado=0;
+                $asesoria->save();
                 //TODO: Agregamos los grados
                 // antes borramos lo que se abia agregado
                 $gradosAntiguos=  DiaGrado::where('dia_id',$dia_id)->delete();
@@ -243,7 +253,42 @@ class DiaController extends Controller
                 return response()->json(false);
         }
     }
-
+    public function enviar(Request $request)
+    {
+        //
+        try{
+        $lista=$request->all();
+        if($lista){
+            foreach($lista as $valor){
+                // return $valor['id'];
+                $editDia= Dia::findOrfail($valor['id']);
+                $editDia->estado=1;
+                $editDia->save();
+                $asesoria_id=$editDia->asesoria_id;
+            }
+            $asesoria=Asesoria::with(['dias'])->where('id',$asesoria_id)->get()->first();
+            $nro_dias_enviados=0;
+            foreach($asesoria->dias as $dias_enviados){
+                if($dias_enviados->estado==1)
+                    $nro_dias_enviados++;
+            }
+            // $asesoria_enviados=Asesoria::whereHas('dias',function($query){
+            //     $query->where('estado',1);
+            // })->where('id',$asesoria_id)->get()->first();
+            // return $asesoria_enviados->dias->count();
+            if($asesoria->dias->count()==$nro_dias_enviados){
+                $asesoria_=Asesoria::findorfail($asesoria_id);
+                $asesoria_->estado=1;
+                $asesoria_->save();
+            }
+            return response()->json(true);
+        }
+        else return false;
+    }
+    catch(Exception $ex){
+        return false;
+    }
+    }
     /**
      * Display the specified resource.
      *

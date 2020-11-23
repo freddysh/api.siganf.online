@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Acompanante;
 use App\Models\Asesoria;
 use App\Models\Dre;
 use App\Models\Iiee;
@@ -64,26 +65,24 @@ class AsesoriaController extends Controller
         ->take(1);
         if(count($ultima_asesoria)>0)
             $constancia_nro=$ultima_asesoria->first()->constancia_nro+1;
-
-        $fecha=explode('-',$request->fecha_envio);
-        $anio=$request->anio;
-        $mes=$request->mes;
-        $fecha_envio= $fecha[2].'-'.$fecha[1].'-'.$fecha[0];
-        $estado=$request->estado;
-        $hay_visita=$request->hay_visita;
-        $user_id=$request->acompanante_id;
-        $iiee_id=$request->iiee_id;
-        $docente_id=$request->docente_id;
-        $asesoria=new Asesoria();
-        $asesoria->anio=$anio;
-        $asesoria->mes=$mes;
-        $asesoria->constancia_nro=$constancia_nro;
-        $asesoria->fecha_envio=$fecha_envio;
-        $asesoria->estado=$estado;
-        $asesoria->hay_visita=$hay_visita;
-        $asesoria->user_id=$user_id;
-        $asesoria->iiee_id=$iiee_id;
-        $asesoria->docente_id=$docente_id;
+            $anio=$request->anio;
+            $mes=$request->mes;
+            $fecha_envio= $request->fecha_envio;
+            $estado=$request->estado;
+            $hay_visita=$request->hay_visita;
+            $user_id=$request->acompanante_id;
+            $iiee_id=$request->iiee_id;
+            $docente_id=$request->docente_id;
+            $asesoria=new Asesoria();
+            $asesoria->anio=$anio;
+            $asesoria->mes=$mes;
+            $asesoria->constancia_nro=$constancia_nro;
+            $asesoria->fecha_envio=$fecha_envio;
+            $asesoria->estado=$estado;
+            $asesoria->hay_visita=$hay_visita;
+            $asesoria->user_id=$user_id;
+            $asesoria->iiee_id=$iiee_id;
+            $asesoria->docente_id=$docente_id;
         if($asesoria->save()){
             return $asesoria->id;
         }else
@@ -100,14 +99,32 @@ class AsesoriaController extends Controller
         $estado=$request->estado;
         $acompanante_id=$request->acompanante_id;
         $iiee_id=$request->iiee_id;
+        if($mes==-1){
+            $mes=array('1','2','3','4','5','6','7','8','9','10','11','12');
+        }
+        else{
+            $mes=array($mes);
+        }
+        if($estado==-1){
+            $estado=array('0','1');
+        }else{
+            $estado=array($estado);
+        }
+        if($iiee_id==-1){
+            $iiee_id=Acompanante::where('user_id',$acompanante_id)->get()->pluck('iiee_id')->toArray();
+            // return $iiee_id;
+        }else{
+            $iiee_id=array($iiee_id);
+        }
 // return "anio:$anio, mes:$mes,estado:$estado, acompanante:$acompanante_id, iiee:$iiee_id";
+
         $asesoria=Asesoria::with(['dias','docente','iiee'])
         ->where('anio',$anio)
-        ->where('mes',$mes)
-        ->where('estado',$estado)
+        ->whereIn('mes',$mes)
+        ->whereIn('estado',$estado)
         ->where('user_id',$acompanante_id)
-        ->where('iiee_id',$iiee_id)
-        ->get();
+        ->whereIn('iiee_id',$iiee_id)
+        ->get()->sortBy('mes');
 
         return response()->json($asesoria);
     }

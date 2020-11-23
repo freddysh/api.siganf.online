@@ -59,6 +59,7 @@ Route::get('v1/grados/{iiee_id}/{nivel}',[GradoController::Class,'nivel_Educativ
 Route::post('v1/grados/{iiee_id}/store',[GradoController::Class,'store']);
 Route::put('v1/grados/{grado_id}/update',[GradoController::Class,'update']);
 Route::get('v1/grados/{grado_id}/delete/ld',[GradoController::Class,'destroy']);
+Route::post('v1/dia/enviar',[DiaController::Class,'enviar']);
 
 Route::get('v1/departamentos',[DepartamentoController::Class,'index']);
 Route::get('v1/{departamento_id}/provincias/',[ProvinciaController::Class,'index']);
