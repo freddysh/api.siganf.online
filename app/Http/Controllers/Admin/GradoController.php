@@ -13,7 +13,7 @@ class GradoController extends Controller
     public function nivel_Educativo($iiee_id,$nivel)
     {
         //
-
+// return "_$iiee_id,$nivel";
        return response()->json(Grado::where('iiee_id',$iiee_id)->where('nivel',$nivel)->get());
     }
     public function store(Request $request,$iiee_id)

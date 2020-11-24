@@ -55,7 +55,7 @@ Route::post('v1/asesoria/store/constacia',[AsesoriaController::Class,'constacia'
 Route::post('v1/dia/store',[DiaController::Class,'store']);
 Route::get('v1/dia/show/{dia_id}',[DiaController::Class,'index']);
 Route::get('v1/dia/{id}/delete',[DiaController::Class,'destroy']);
-Route::get('v1/grados/{iiee_id}/{nivel}',[GradoController::Class,'nivel_Educativo']);
+Route::get('v1/grados-/{iiee_id}/{nivel}',[GradoController::Class,'nivel_Educativo']);
 Route::post('v1/grados/{iiee_id}/store',[GradoController::Class,'store']);
 Route::put('v1/grados/{grado_id}/update',[GradoController::Class,'update']);
 Route::get('v1/grados/{grado_id}/delete/ld',[GradoController::Class,'destroy']);
